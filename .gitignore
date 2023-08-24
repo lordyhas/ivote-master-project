@@ -13,3 +13,8 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+DatabaseEnv.java
+DatabaseEnv.class
+DBEnv.java
+google-services.json

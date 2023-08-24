@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">iVote</string>
+    <string name="app_name">iVote UNH</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -10,6 +10,7 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Votes</string>
     <string name="menu_slideshow">Organisations</string>
+    <string name="menu_org">Organisations</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_username">Name</string>
@@ -70,4 +71,7 @@
     <string name="votes">Votes</string>
     <string name="plus">Plus</string>
     <string name="title_activity_vote">VoteActivity</string>
+    <string name="have_account">J\'ai déjà un compte</string>
+    <string name="have_no_account">Je n\'ai pas de compte</string>
+    <string name="vote_logo">vote_logo</string>
 </resources>
