@@ -24,6 +24,7 @@
                 android:id="@+id/voteItemImage"
                 android:layout_width="60dp"
                 android:layout_height="55dp"
+                android:layout_margin="4dp"
                 android:padding="1dp"
                 app:srcCompat="@mipmap/ic_launcher"
                 tools:ignore="VectorDrawableCompat" />
@@ -39,17 +40,31 @@
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="4dp"
                     android:layout_marginStart="10dp"
-                    android:text="Item ipsum"
+                    android:text="Vote title"
                     android:textColor="@color/black"
                     android:textSize="18dp" />
 
-                <TextView
-                    android:id="@+id/pageLivre"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="15dp"
-                    android:text="#none"
-                    android:textAlignment="textEnd" />
+                    android:layout_marginStart="10dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:layout_marginEnd="8dp"
+                        android:text="Organisation : " />
+                    <TextView
+                        android:id="@+id/pageLivre"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="15dp"
+                        android:text="#none"
+                        android:textAlignment="textEnd" />
+                </LinearLayout>
+
+
             </LinearLayout>
         </LinearLayout>
 

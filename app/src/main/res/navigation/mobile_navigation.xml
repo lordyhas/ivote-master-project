@@ -13,13 +13,13 @@
 
     <fragment
         android:id="@+id/nav_gallery"
-        android:name="org.unh.i_vote.ui.gallery.GalleryFragment"
+        android:name="org.unh.i_vote.ui.vote.VoteFragment"
         android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        tools:layout="@layout/fragment_vote" />
 
     <fragment
         android:id="@+id/nav_slideshow"
-        android:name="org.unh.i_vote.ui.slideshow.SlideshowFragment"
+        android:name="org.unh.i_vote.ui.organization.OrganizationFragment"
         android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        tools:layout="@layout/fragment_organization" />
 </navigation>
