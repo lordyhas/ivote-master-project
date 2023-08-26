@@ -46,7 +46,8 @@ public class OrganizationFragment extends Fragment {
         View root = binding.getRoot();
 
         final TextView textView = binding.titleOrg;
-        organizationViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        //organizationViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        textView.setText("Organisations dont vous êtes membres"); // d'appartenance
 
         List<ItemModel> organizations = new ArrayList<>();
 
