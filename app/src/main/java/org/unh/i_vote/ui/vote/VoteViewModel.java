@@ -1,14 +1,14 @@
-package org.unh.i_vote.ui.gallery;
+package org.unh.i_vote.ui.vote;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class GalleryViewModel extends ViewModel {
+public class VoteViewModel extends ViewModel {
 
     private final MutableLiveData<String> mText;
 
-    public GalleryViewModel() {
+    public VoteViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("This is gallery fragment");
     }
