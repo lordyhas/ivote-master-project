@@ -1,4 +1,4 @@
-package org.unh.i_vote.data;
+package org.unh.i_vote.data.controller;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,33 +11,35 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.unh.i_vote.R;
+import org.unh.i_vote.data.model.ItemModel;
+import org.unh.i_vote.data.model.ItemVoteModel;
 
 import java.util.List;
 
-public class LivresAdapter extends RecyclerView.Adapter<LivresAdapter.LivresVH> {
+public class VoteItemAdapter extends RecyclerView.Adapter<VoteItemAdapter.ItemViewHolder> {
     private static ClickListener clickListener;
 
 
-    private List<LivresModel> listRecyLivre;
+    private final List<ItemVoteModel> itemVoteList;
 
-    public LivresAdapter(List<LivresModel> listRecyLivre) {
-        this.listRecyLivre = listRecyLivre;
+    public VoteItemAdapter(List<ItemVoteModel> itemVoteList) {
+        this.itemVoteList = itemVoteList;
     }
 
     @NonNull
     @Override
-    public LivresVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_livres_recyview, parent, false);
-        LivresVH livresVH = new LivresVH(view);
-        return livresVH;
+    public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_vote_recyview, parent, false);
+        ItemViewHolder itemViewHolder = new ItemViewHolder(view);
+        return itemViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull LivresVH holder, int position) {
-        LivresModel livresModel = listRecyLivre.get(position);
-        holder.itemName.setText(livresModel.getTitre());
-        holder.ItemHint.setText(livresModel.getPage());
-        holder.logoImage.setImageResource(livresModel.getLogo());
+    public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
+        ItemVoteModel itemModel = itemVoteList.get(position);
+        holder.itemName.setText(itemModel.getTitle());
+        holder.ItemHint.setText(itemModel.getOrgName());
+        if(itemModel.getLogo() != null) holder.logoImage.setImageResource(itemModel.getLogo());
         //holder.logoImage.setImageResource();
 
 
@@ -45,16 +47,16 @@ public class LivresAdapter extends RecyclerView.Adapter<LivresAdapter.LivresVH> 
 
     @Override
     public int getItemCount() {
-        return listRecyLivre.size();
+        return itemVoteList.size();
     }
 
-    public class LivresVH extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    public static class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         TextView itemName;
         TextView ItemHint;
         ImageView logoImage;
 
         CardView itemCard;
-        public LivresVH(@NonNull View itemView) {
+        public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             itemName = itemView.findViewById(R.id.nomLivre);
@@ -77,10 +79,10 @@ public class LivresAdapter extends RecyclerView.Adapter<LivresAdapter.LivresVH> 
     }
 
     public void setOnItemClickListener(ClickListener clickListener) {
-        LivresAdapter.clickListener = clickListener;
+        VoteItemAdapter.clickListener = clickListener;
     }
 
-    protected interface ClickListener {
+    public interface ClickListener {
         void onItemClick(int position, View v);
         void onItemLongClick(int position, View v);
     }
