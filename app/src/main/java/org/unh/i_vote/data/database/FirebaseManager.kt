@@ -2,17 +2,56 @@ package org.unh.i_vote.data.database
 
 import android.content.ContentValues.TAG
 import android.util.Log
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import org.unh.i_vote.data.database.model.Organization
 import org.unh.i_vote.data.database.model.User
 
 
-private val store = Firebase.firestore.collection("iVoteApp").document("general_data")
-private val userRef =  store.collection("USERS");
-private val orgRef = store.collection("ORGS");
-private val orgVoteRef = store.collection("ORGS/private/votes");
-private val publicVoteRef = store.collection("PUBLIC_VOTES");
+/*private val store = Firebase.firestore.collection("iVoteApp").document("general_data")
+public val userRef =  store.collection("USERS");
+public val orgRef = store.collection("ORGS");
+public val orgVoteRef = store.collection("ORGS/private/votes");
+public val publicVoteRef = store.collection("PUBLIC_VOTES");
+*/
+
+private fun getFireStore(): FirebaseFirestore {
+    // Using a builder pattern
+    val settings = FirebaseFirestoreSettings.Builder()
+        .setPersistenceEnabled(true)
+        .build()
+
+    val firestore = Firebase.firestore
+
+    firestore.firestoreSettings = settings
+
+    return firestore;
+}
+
+class FirebaseRef {
+    // Initialize Firestore
+
+
+// Enable offline persistence
+
+    companion object{
+
+
+
+        private val store = getFireStore().collection("iVoteApp")
+            .document("general_data")
+        @JvmField
+        val userCollection =  store.collection("USERS");
+
+        @JvmField
+        val orgCollection = store.collection("ORGS");
+
+        @JvmField
+        val publicVoteCollection = store.collection("PUBLIC_VOTES");
+    }
+}
 
 class FirebaseManager(user: User) {
     fun getOrganizations() : List<Organization> {
@@ -22,9 +61,9 @@ class FirebaseManager(user: User) {
     companion object Users{
 
         fun createUser(user: User){
-            userRef.document(user.email).get().addOnSuccessListener { doc ->
+            FirebaseRef.userCollection.document(user.email).get().addOnSuccessListener { doc ->
                 if (doc.exists()) {
-                    userRef.document(user.email)
+                    FirebaseRef.userCollection.document(user.email)
                         .set(user)
                         .addOnSuccessListener {
                             Log.d(TAG, "User create [$user]")
@@ -40,6 +79,7 @@ class FirebaseManager(user: User) {
                 Log.w(TAG, "Error on getting document", e)
             }
         }
+
         fun updateUser(email : String){
 
         }
