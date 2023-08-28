@@ -16,7 +16,7 @@ public class LoginDataSource {
             LoggedInUser sUser =
                     new LoggedInUser(
                             java.util.UUID.randomUUID().toString(),
-                            username, email);
+                            username, email, password);
             return new Result.Success<>(sUser);
         } catch (Exception e) {
             return new Result.Error(new IOException("Error logging in", e));
@@ -29,7 +29,7 @@ public class LoginDataSource {
             // TODO: handle loggedInUser authentication
             LoggedInUser sUser =
                     new LoggedInUser(
-                            java.util.UUID.randomUUID().toString(), null, email);
+                            java.util.UUID.randomUUID().toString(), null, email, password);
             return new Result.Success<>(sUser);
         } catch (Exception e) {
             return new Result.Error(new IOException("Error logging in", e));
