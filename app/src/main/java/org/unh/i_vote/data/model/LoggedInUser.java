@@ -6,22 +6,24 @@ package org.unh.i_vote.data.model;
 public class LoggedInUser {
 
     private String userId;
-    private String displayName;
+    private String name;
 
     private String email;
+    private String password;
 
-    public LoggedInUser(String userId, String displayName, String email) {
+    public LoggedInUser(String userId, String name, String email, String password) {
         this.userId = userId;
-        this.displayName = displayName;
+        this.name = name;
         this.email = email;
+        this.password = password;
     }
 
     public String getUserId() {
         return userId;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public String getName() {
+        return name;
     }
 
     public  String getEmail(){

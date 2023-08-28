@@ -6,11 +6,14 @@ package org.unh.i_vote.ui.login;
 class LoggedInUserView {
     private final String displayName;
     private final String displayEmail;
+
+    private String password;
     //... other data fields that may be accessible to the UI
 
-    LoggedInUserView(String displayEmail, String displayName) {
+    LoggedInUserView(String displayEmail, String displayName, String password) {
         this.displayName = displayName;
         this.displayEmail = displayEmail;
+        this.password = password;
     }
 
     String getDisplayName() {
@@ -19,5 +22,17 @@ class LoggedInUserView {
 
     String getDisplayEmail(){
         return displayEmail;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    Boolean isLoggingIn(){
+        return displayName == null;
+    }
+
+    Boolean isSigningIn(){
+        return displayName != null;
     }
 }
