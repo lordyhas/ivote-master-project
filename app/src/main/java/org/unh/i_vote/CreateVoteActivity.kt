@@ -1,11 +1,13 @@
 package org.unh.i_vote
 
+import android.content.ContentValues
+import android.content.ContentValues.TAG
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.appcompat.view.ContextThemeWrapper
-import androidx.appcompat.widget.Toolbar
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,9 +16,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenu
@@ -25,6 +30,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -34,6 +40,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.primarySurface
 import androidx.compose.runtime.Composable
@@ -52,36 +60,49 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
+import androidx.navigation.compose.rememberNavController
+import org.unh.i_vote.data.database.FirebaseManager
+import org.unh.i_vote.data.database.FirebaseRef
+import org.unh.i_vote.data.database.model.Choice
+import org.unh.i_vote.data.database.model.User
+import org.unh.i_vote.data.database.model.Vote
 import org.unh.i_vote.ui.theme.IVoteTheme
+import java.io.Serializable
+import java.util.Date
 
 
 class CreateVoteActivity : ComponentActivity() {
 
-    fun createVote(){
-        val intent = intent // Get the intent that started this activity
+    private val typeOfVote = listOf("Choix binaire", "Choix multiple")
 
-        val email = intent.getStringExtra("email") // Get the string with the key "message" from the intent
 
-        Toast.makeText(this, email, Toast.LENGTH_SHORT).show() // Display a toast with the
-        //val fbm = FirebaseManager()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //val toolbar = Toolbar(this).apply { title = "My App" }
 
-        // Set the toolbar as the support action bar
-
-        //setActionBar(toolbar)
 
         setContent {
             MaterialTheme {
-                val choices = remember { mutableStateListOf<String>() }
-                //val count = remember { mutableStateOf(0) }
+                val textList = remember{
+                    mutableStateListOf<TextFieldValue>()
+                }
 
-                val typeOfVote = listOf("Choix binaire", "Choix mutiple")
+                val choicesStateList = remember { mutableStateListOf<String>() }
+                val voteMutableState =  remember { mutableStateOf<Vote>(Vote.empty) }
+                //val count = remember { mutableStateOf(1) }
+
                 val selectedTypeOfVote = remember { mutableStateOf<String>(typeOfVote[0]) }
+
+                val textValues = remember { mutableStateListOf(*List(1) { "" }.toTypedArray()) }
+
+                /*var title = rememberSaveable(stateSaver = TextFieldValue.Saver) {
+                    mutableStateOf(TextFieldValue("", TextRange(0, 64)))
+                }*/
+
+                var title by  remember { mutableStateOf("") }
+                var subject by  remember { mutableStateOf("") }
+
+                val navController = rememberNavController()
 
                 val scrollState = rememberScrollState()
                 // A surface container using the 'background' color from the theme
@@ -90,10 +111,11 @@ class CreateVoteActivity : ComponentActivity() {
                         //AndroidView(factory = { toolbar })
                         TopAppBar(
                             backgroundColor = Color(0xFF6750A4),
-                            title = { Text("Creer un vote") },
+                            contentColor = Color.White,
+                            title = { Text("Créer un vote") },
                             //windowInsets = AppBarDefaults.topAppBarWindowInsets,
                             navigationIcon = {
-                                IconButton(onClick = { /* doSomething() */ }) {
+                                IconButton(onClick = { navController.popBackStack()}) {
                                     Icon(Icons.Filled.ArrowBack, contentDescription = null)
                                 }
                             },
@@ -116,6 +138,7 @@ class CreateVoteActivity : ComponentActivity() {
                     content = { padding ->
                         Box(modifier = Modifier.padding(padding)){
                             Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .verticalScroll(scrollState)
@@ -123,18 +146,36 @@ class CreateVoteActivity : ComponentActivity() {
                             ) {
                                 //InputEmail()
                                 //Spacer(modifier = Modifier.padding(8.dp))
-                                var subject by rememberSaveable(stateSaver = TextFieldValue.Saver) {
+
+                                /*rememberSaveable(stateSaver = TextFieldValue.Saver) {
                                     mutableStateOf(TextFieldValue("", TextRange(0, 256)))
+                                }*/
+
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier.fillMaxSize(),
+                                ) {
+
+                                    TextField(
+                                        value = title,
+                                        onValueChange = { title = it },
+                                        label = { Text("Titre") },
+                                        placeholder = { Text("Entrer le titre du vote") },
+                                        modifier = Modifier.size(height = 50.dp, width = 320.dp),
+                                    )
+                                    Spacer(modifier = Modifier.padding(8.dp))
+                                    OutlinedTextField(
+                                        value = subject,
+                                        onValueChange = { subject = it },
+                                        label = { Text("Entrer le sujet du vote") },
+                                        placeholder = { Text("Sujet") },
+                                        maxLines = 5,
+                                        modifier= Modifier.size(height = 100.dp, width = 320.dp),
+                                        //singleLine = false,
+                                    )
                                 }
 
-                                TextField(
-                                    value = subject,
-                                    onValueChange = { subject = it },
-                                    label = { Text("Entrer le sujet du vote") },
-                                    placeholder = { Text("Sujet") },
-                                    maxLines = 5,
-                                    singleLine = false,
-                                )
+
                                 Spacer(modifier = Modifier.padding(8.dp))
 
                                 /*var number by rememberSaveable(stateSaver = TextFieldValue.Saver) {
@@ -142,43 +183,62 @@ class CreateVoteActivity : ComponentActivity() {
                                 }*/
 
 
-                                Box(modifier = Modifier.size(height = 50.dp, width = 160.dp)){
 
-                                    // A dropdown textfield with a label and options
-                                    DropdownTextField(
-                                        label = "Type de vote",
-                                        options = typeOfVote,
-                                        selectedOption = selectedTypeOfVote.value,
-                                        onOptionSelected = { selectedTypeOfVote.value = it }
-                                    )
-                                }
+                                // A dropdown textfield with a label and options
+                                DropdownTextField(
+                                    modifier = Modifier.size(height = 50.dp, width = 320.dp),
+                                    label = "Type de vote",
+                                    options = typeOfVote,
+                                    selectedOption = selectedTypeOfVote.value,
+                                    onOptionSelected = { selectedTypeOfVote.value = it }
+                                )
+
                                 Spacer(modifier = Modifier.padding(8.dp))
 
                                 ///----------------------------------------------------
                                 if(selectedTypeOfVote.value == typeOfVote[1]){
                                     Column (horizontalAlignment = Alignment.CenterHorizontally) {
                                         Row{
-                                            Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+                                            Spacer(modifier = Modifier.padding(horizontal = 4.dp))
                                             OutlinedButton(
-                                                onClick = { choices.removeAt(0) }, // Increment the count on click
+                                                onClick = { if(textValues.size >= 1){
+                                                    //count.value--;
+                                                    textValues.removeLast()
+
+                                                }
+                                                    //choicesStateList.removeLast()
+                                                          }, // Increment the count on click
                                                 border = BorderStroke(
                                                     1.dp, MaterialTheme.colors.primarySurface), // Set the border width and color
                                                 shape = RoundedCornerShape(8.dp) // Set the corner radius
                                             ) {
-                                                Text(text = "Remove choice") // Display the text and count
+                                                Icon(
+                                                    Icons.Filled.KeyboardArrowDown,
+                                                    contentDescription = null,
+                                                )
+                                                Text(text = "Supprimer choix") // Display the text and count
                                             }
-                                            Spacer(modifier = Modifier.padding(horizontal = 16.dp))
+                                            Spacer(modifier = Modifier.padding(horizontal = 8.dp))
                                             OutlinedButton(
-                                                onClick = { choices.add("__") }, // Increment the count on click
+                                                onClick = {
+                                                    if(textValues.size <= 5){
+                                                        //count.value++;
+                                                        textValues.add("")
+                                                    } //choicesStateList.add("__")
+                                                          }, // Increment the count on click
                                                 border = BorderStroke(
                                                     1.dp, MaterialTheme.colors.primarySurface), // Set the border width and color
                                                 shape = RoundedCornerShape(8.dp) // Set the corner radius
                                             ) {
-                                                Text(text = "Add choice") // Display the text and count
+                                                Text(text = "Ajouter un choix")
+                                                Icon(
+                                                    Icons.Filled.KeyboardArrowUp,
+                                                    contentDescription = null,
+                                                )
                                             }
-                                            Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+                                            Spacer(modifier = Modifier.padding(horizontal = 4.dp))
                                         }
-                                        Text(text = "Number of choice ${choices.size}/5")
+                                        Text(text = "Nombre de choix ${choicesStateList.size}/5")
                                     }
                                 }
                                 ///----------------------------------------------------
@@ -188,7 +248,8 @@ class CreateVoteActivity : ComponentActivity() {
                                 Spacer(modifier = Modifier.padding(8.dp))
                                 Column(horizontalAlignment = Alignment.CenterHorizontally){
                                     Card(
-                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
+                                        modifier = Modifier
+                                            .padding(horizontal = 8.dp, vertical = 8.dp),
                                         border = BorderStroke(1.dp, Color.Gray),
                                     ){
                                         Column(
@@ -197,20 +258,95 @@ class CreateVoteActivity : ComponentActivity() {
                                         ){
                                             //if (number.isNotEmpty())
                                             //count.value = number.toInt();
-                                            Box(modifier = Modifier.size(width = 300.dp, height = 10.dp))
-                                            Text(text = "Les choix du vote", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                                            Box(
+                                                modifier = Modifier
+                                                    .size(width = 300.dp, height = 10.dp),
+                                            )
+                                            Text(
+                                                text = "Les choix du vote",
+                                                fontSize = 22.sp,
+                                                fontWeight = FontWeight.Bold,
+                                            )
                                             Divider(modifier = Modifier.padding(8.dp))
-                                            if(selectedTypeOfVote.value == typeOfVote[0]){
+                                            if(isUniqueChoice(selectedTypeOfVote.value)){
                                                 Text("Oui   |    Non", fontSize = 18.sp)
                                             }else{
-                                                choices.forEach { text ->
-                                                    InputChoice(0)
-                                                    //Text(text = text)
-                                                    Spacer(modifier = Modifier.padding(8.dp)) // Add some space between texts
+                                                textValues.forEachIndexed { index, value ->
+                                                    TextField(
+                                                        value = value,
+                                                        onValueChange = { textValues[index] = it },
+                                                        label = { Text("Entrer un choix du vote") },
+                                                        placeholder = { Text("Choix") },
+                                                        leadingIcon = { Icon(Icons.Filled.Done, contentDescription = null) }
+                                                    )
+                                                    Spacer(modifier = Modifier.padding(8.dp))
                                                 }
                                             }
-
                                         }
+                                    }
+                                }
+
+                                Spacer(modifier = Modifier.padding(16.dp))
+
+                                Row{
+                                    OutlinedButton(onClick = { finish()}) {
+                                        Text(text = "Quitter")
+                                    }
+                                    Spacer(modifier = Modifier.padding(16.dp))
+                                    Button(onClick = {
+                                        val intent = Intent(
+                                            this@CreateVoteActivity,
+                                            MainActivity::class.java
+                                        )
+                                        //intent.putExtra("vote", voteMutableState.value.toMap() as Serializable);
+                                        //intent.put
+
+                                        val ans = mutableSetOf<Choice>()
+                                        if(isUniqueChoice(selectedTypeOfVote.value)){
+                                            ans.add(Choice("OUI",0))
+                                            ans.add(Choice("NON",0))
+                                        }
+                                        else{
+                                            textValues.forEach { value -> ans.add(Choice(value,0)) }
+                                        }
+
+                                        val vote = Vote(
+                                            id = System.currentTimeMillis().toString(),
+                                            authorId= "",
+                                            authorName = "",
+                                            isPrivateResult = false,
+                                            isUniqueChoice = isUniqueChoice(selectedTypeOfVote.value),
+                                            title = title,
+                                            subject = subject,
+                                            choices = ans.toList(),
+                                            endDate = Date()
+                                        )
+
+
+                                        voteMutableState.value = vote
+
+                                        if(voteMutableState.value.id.isNotBlank() &&
+                                            voteMutableState.value.title.isNotBlank() &&
+                                            voteMutableState.value.subject.isNotBlank()
+                                        ){
+                                            createVote(voteMutableState.value);
+                                            Toast.makeText(
+                                                applicationContext,
+                                                "vote : ${voteMutableState.value.title} a été créé",
+                                                Toast.LENGTH_LONG,
+                                            ).show()
+                                            //navController.popBackStack()
+                                        }else{
+                                            Toast.makeText(
+                                                applicationContext,
+                                                "Veuillez completer le vote, avant de créer",
+                                                Toast.LENGTH_LONG,
+                                            ).show() // in Activity
+                                        }
+                                        //startActivity(intent)
+                                        //finish()
+                                    }) {
+                                        Text(text = "Créer le vote")
                                     }
                                 }
 
@@ -223,12 +359,48 @@ class CreateVoteActivity : ComponentActivity() {
         }
     }
 
-    @Composable
-    fun Padding(content: @Composable() ()-> Unit){
-        Surface(modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)) {
-            content
-        }
+    private fun isUniqueChoice(value : String) : Boolean{
+        return value == typeOfVote.first()
     }
+
+    private fun createVote(vote : Vote){
+        lateinit var user: User
+        val intent = intent // Get the intent that started this activity
+
+        val email = intent.getStringExtra("email") // Get the string with the key "message" from the intent
+        if(email.isNullOrBlank()) return;
+        //FirebaseManager.Users
+
+
+        FirebaseRef.userCollection.document(email).get().addOnSuccessListener{ doc ->
+            if (doc.exists()) {
+                //user = doc.data?.let { User.fromMap(it) }!!
+
+                user = doc.data?.let { User.fromMap(it) }!!
+                Log.d(ContentValues.TAG, "User [$user] found")
+
+                vote.authorId = user.email
+                vote.authorName = user.name
+
+                FirebaseRef.publicVoteCollection.document(vote.id).set(vote.toMap())
+                    .addOnSuccessListener {
+                        Log.d(TAG, "vote successfully written!")
+                        //finish();
+                    }
+                    .addOnFailureListener { e -> Log.w(TAG, "Error writing [vote]", e) }
+            } else {
+                Log.d(ContentValues.TAG, "User [$email] does not exist")
+            }
+        }.addOnFailureListener { e ->
+            // Une erreur s'est produite
+            Log.w(ContentValues.TAG, "Error on getting document", e)
+        }
+
+
+        //Toast.makeText(this, email, Toast.LENGTH_SHORT).show() // Display a toast with the
+        //val fbm = FirebaseManager(user)
+    }
+
     @Preview(showBackground = true)
     @Composable
     fun InputEmail(){
@@ -243,16 +415,39 @@ class CreateVoteActivity : ComponentActivity() {
         )
     }
 
+    @Composable
+    fun TextFieldList(n: Int) {
+        val textValues = remember { mutableStateListOf(*List(n) { "" }.toTypedArray()) }
+        // Afficher une liste de TextField à partir des indices de 0 à n-1
+        LazyColumn {
+            itemsIndexed(textValues) { index, value ->
+                // Créer un TextField avec la valeur et l'indice actuels
+                TextField(
+                    value = value,
+                    label = { Text("Champ $index") },
+                    // Mettre à jour la valeur dans la liste d'état lorsque le texte change
+                    onValueChange = { textValues[index] = it }
+                )
+            }
+        }
+    }
+
     //@Preview(showBackground = true)
     @Composable
-    fun InputChoice(index: Int){
+    fun InputChoice(
+        value: TextFieldValue,
+        onValueChange: (TextFieldValue) -> Unit,
+    ){
 
         var text by rememberSaveable(stateSaver = TextFieldValue.Saver) {
             mutableStateOf(TextFieldValue("", TextRange(0, 128)))
         }
         TextField(
-            value = text,
-            onValueChange = { text = it },
+            value = value,
+            onValueChange = {
+                if (value != it) {
+                    onValueChange(it)
+                } },
             label = { Text("Entrer un choix du vote") },
             placeholder = { Text("Choix") },
             leadingIcon = {
@@ -282,6 +477,7 @@ class CreateVoteActivity : ComponentActivity() {
 
     @Composable
     fun DropdownTextField(
+        modifier: Modifier = Modifier,
         label: String,
         options: List<String>,
         selectedOption: String,
@@ -293,6 +489,7 @@ class CreateVoteActivity : ComponentActivity() {
         Box {
             // A text field with a label and a trailing icon
             TextField(
+                modifier = modifier,
                 value = selectedOption,
                 onValueChange = { },
                 label = { Text(label) },
