@@ -74,4 +74,5 @@
     <string name="have_account">J\'ai déjà un compte</string>
     <string name="have_no_account">Je n\'ai pas de compte</string>
     <string name="vote_logo">vote_logo</string>
+    <string name="title_activity_join_org">JoinOrgActivity</string>
 </resources>

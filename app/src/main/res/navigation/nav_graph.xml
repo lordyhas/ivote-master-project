@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/FirstFragment"
-        android:name="org.unh.i_vote.FirstFragment"
+        android:name="org.unh.i_vote.JoinOrgFragment"
         android:label="@string/first_fragment_label"
         tools:layout="@layout/fragment_first">
 
