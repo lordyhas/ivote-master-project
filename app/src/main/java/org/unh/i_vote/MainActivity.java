@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             Vote vote = Vote.Companion.fromMap(doc.getData());
                             Log.d(TAG, "Votes found : "+doc.getData());
 
-
                             Date currentDate = new Date();
                             Date startDate = vote.getEndDate();
                             long diffInMillies = Math.abs(startDate.getTime() - currentDate.getTime());
