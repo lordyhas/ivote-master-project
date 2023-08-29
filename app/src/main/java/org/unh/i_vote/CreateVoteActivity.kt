@@ -70,16 +70,19 @@ import org.unh.i_vote.ui.theme.IVoteTheme
 import java.io.Serializable
 import java.util.Date
 
+/*
+ *
+ * @author lordyhas (Hassan K.)
+ *
+ */
 
 class CreateVoteActivity : ComponentActivity() {
 
     private val typeOfVote = listOf("Choix binaire", "Choix multiple")
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
 
         setContent {
             MaterialTheme {
@@ -93,11 +96,7 @@ class CreateVoteActivity : ComponentActivity() {
 
                 val selectedTypeOfVote = remember { mutableStateOf<String>(typeOfVote[0]) }
 
-                val textValues = remember { mutableStateListOf(*List(1) { "" }.toTypedArray()) }
-
-                /*var title = rememberSaveable(stateSaver = TextFieldValue.Saver) {
-                    mutableStateOf(TextFieldValue("", TextRange(0, 64)))
-                }*/
+                val textValues = remember { mutableStateListOf(*List(1) {""}.toTypedArray()) }
 
                 var title by  remember { mutableStateOf("") }
                 var subject by  remember { mutableStateOf("") }
