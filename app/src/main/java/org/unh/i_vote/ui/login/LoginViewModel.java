@@ -10,7 +10,11 @@ import org.unh.i_vote.data.LoginRepository;
 import org.unh.i_vote.data.Result;
 import org.unh.i_vote.data.model.LoggedInUser;
 import org.unh.i_vote.R;
-
+/*
+ *
+ * @author lordyhas (Hassan K.)
+ *
+ */
 public class LoginViewModel extends ViewModel {
     private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
     private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();

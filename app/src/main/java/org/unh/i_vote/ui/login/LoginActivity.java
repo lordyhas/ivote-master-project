@@ -47,6 +47,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/*
+ *
+ * @author lordyhas (Hassan K.)
+ *
+ */
 public class LoginActivity extends AppCompatActivity {
 
     final static int RC_SIGN_IN_OK = 123;
