@@ -22,7 +22,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.type.Date;
+
 import com.google.type.DateTime;
 
 import org.unh.i_vote.VoteActivity;
@@ -41,12 +41,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 public class VoteFragment extends Fragment {
 
     private FragmentVoteBinding binding;
+
+    static ArrayList<ItemVoteModel> votes;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -60,29 +63,71 @@ public class VoteFragment extends Fragment {
         //galleryViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
 
-        ArrayList<ItemVoteModel> votes = new ArrayList<>(Arrays.asList(itemVoteModels));
+        votes = new ArrayList<>();
+
+        RecyclerView recyclerView = binding.voteRecyclerView; //findViewById(R.id.voteRecyclerView);
+        //recyclerView.setOnClickListener(this);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
 
         FirebaseRef.publicVoteCollection.get().addOnCompleteListener(
-                new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot doc : task.getResult()) {
-                                votes.add(new ItemVoteModel(Vote.Companion.fromMap(doc.getData())));
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting public votes documents: ", task.getException());
+                task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            votes.add(new ItemVoteModel(Vote.Companion.fromMap(doc.getData())));
+                            Log.d(TAG, "=== Vote found : "+doc.getData(), task.getException());
                         }
+                    } else {
+                        Log.d(TAG, "=== Error getting public votes documents: ", task.getException());
                     }
+                    //votes.addAll(Arrays.asList(itemVoteModels));
+
+
+                    VoteItemAdapter voteItemAdapter = new VoteItemAdapter(votes);
+                    recyclerView.setAdapter(voteItemAdapter);
+
+                    //votes.add(new LivresModel("Livre F de lecture 7","722 pages",logoDefault));
+
+                    voteItemAdapter.setOnItemClickListener(new VoteItemAdapter.ClickListener() {
+                        @Override
+                        public void onItemClick(int position, View v) {
+
+                            Intent intent = new Intent(getContext(), VoteActivity.class);
+                            intent.putExtra("index", position);
+                            votes.get(position).vote.toMap().forEach((key, value) ->
+                                intent.putExtra(key,value.toString())
+                            );
+
+
+                            Intent dataIntent = requireActivity().getIntent();
+                            String email = dataIntent.getStringExtra("email");
+                            //String orgName = dataIntent.getStringExtra("orgName");
+                            String voteId = votes.get(position).vote.getId();
+
+                            intent.putExtra("voteId",voteId);
+                            intent.putExtra("email",email);
+                            intent.putExtra("orgName",votes.get(position).getOrgName());
+
+                            Toast.makeText(v.getContext(), "vote data is loading... ", Toast.LENGTH_SHORT).show();
+
+                            startActivity(intent);
+                        }
+
+                        @Override
+                        public void onItemLongClick(int position, View v) {
+                            Toast.makeText(v.getContext(), "onItemLongClick = " + position, Toast.LENGTH_SHORT).show();
+                            //Log.d(TAG, "onItemLongClick pos = " + position);
+                        }
+                    });
                 }
         );
 
-        FirebaseRef.userCollection.document("__").get()
+        /*FirebaseRef.userCollection.document("__").get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 User user = documentSnapshot.toObject(User.class);
-                assert user != null;
+                if(user == null) return;
                 List<String> orgs = user.getOrgList();
                 for (String o : user.getOrgList()) {
                     FirebaseRef.orgCollection.document(o).collection("votes").get()
@@ -103,7 +148,7 @@ public class VoteFragment extends Fragment {
                     );
                 }
             }
-        });
+        });*/
 
         /*FirebaseRef.orgCollection.whereEqualTo("us", true)
                 .get().addOnCompleteListener(
@@ -131,71 +176,6 @@ public class VoteFragment extends Fragment {
 
 
 
-        RecyclerView recyclerView = binding.voteRecyclerView; //findViewById(R.id.voteRecyclerView);
-        //recyclerView.setOnClickListener(this);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layoutManager);
-
-        VoteItemAdapter voteItemAdapter = new VoteItemAdapter(votes);
-        recyclerView.setAdapter(voteItemAdapter);
-
-        //votes.add(new LivresModel("Livre F de lecture 7","722 pages",logoDefault));
-
-        voteItemAdapter.setOnItemClickListener(new VoteItemAdapter.ClickListener() {
-            @Override
-            public void onItemClick(int position, View v) {
-                Toast.makeText(v.getContext(), "onItemClick = " + position, Toast.LENGTH_SHORT).show();
-                int index  = v.getId();
-
-                Intent intent = new Intent(getContext(), VoteActivity.class);
-                intent.putExtra("listKey",index);
-                intent.putExtra("title",votes.get(index).getTitle());
-                intent.putExtra("org",votes.get(index).getSubTitle());
-                intent.putExtra("myObject", (Serializable) votes.get(index));
-                startActivity(intent);
-
-                switch (position){
-                    case 1:
-                        Intent intent1 = new Intent(getContext(), VoteActivity.class);
-                        intent1.putExtra("listKey",2);
-                        intent1.putExtra("title","Mon livres");
-                        startActivity(intent1);
-                        break;
-
-                    case 2:
-                        Intent intent2 = new Intent(getContext(), VoteActivity.class);
-                        intent2.putExtra("listKey",3);
-                        intent2.putExtra("title","Mon livres");
-                        startActivity(intent2);
-                        break;
-                    case 3:
-                        Intent intent3 = new Intent(getContext(), VoteActivity.class);
-                        intent3.putExtra("listKey",4);
-                        intent3.putExtra("title","Mon livres");
-                        startActivity(intent3);
-                        break;
-                    case 4:
-                        Intent intent4 = new Intent(getContext(),VoteActivity.class);
-                        intent4.putExtra("listKey",5);
-                        intent4.putExtra("title","Mon livres");
-                        startActivity(intent4);
-                        break;
-
-                    default:
-                        break;
-
-                }
-            }
-
-            @Override
-            public void onItemLongClick(int position, View v) {
-                Toast.makeText(v.getContext(), "onItemLongClick = " + position, Toast.LENGTH_SHORT).show();
-                //Log.d(TAG, "onItemLongClick pos = " + position);
-            }
-        });
-
-
-
 
 
         return root;
@@ -209,10 +189,10 @@ public class VoteFragment extends Fragment {
 
 
     ItemVoteModel[] itemVoteModels = new ItemVoteModel[]{
-        new ItemVoteModel(new Vote("1","","",false,false,"Vote des délegués","Public",new ArrayList<Choice>(), Date.getDefaultInstance())),
-        new ItemVoteModel(new Vote("2","","",false,false,"Theme : legende of classic","Public",new ArrayList<Choice>(), Date.getDefaultInstance())),
-        new ItemVoteModel(new Vote("2","","",false,false,"Vote représentant club info","Adminstn UNH",new ArrayList<Choice>(), Date.getDefaultInstance())),
-        new ItemVoteModel(new Vote("2","","",false,false,"Date ouverture bibliothèques","Public",new ArrayList<Choice>(), Date.getDefaultInstance())),
+        new ItemVoteModel(new Vote("1","","",false,false,"Vote des délegués","Public",new ArrayList<Choice>(), new Date())),
+        new ItemVoteModel(new Vote("2","","",false,false,"Theme : legende of classic","Public",new ArrayList<Choice>(), new Date())),
+        new ItemVoteModel(new Vote("2","","",false,false,"Vote représentant club info","Adminstn UNH",new ArrayList<Choice>(), new Date())),
+        new ItemVoteModel(new Vote("2","","",false,false,"Date ouverture bibliothèques","Public",new ArrayList<Choice>(), new Date())),
     };
 }
 
