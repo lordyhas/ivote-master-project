@@ -2,7 +2,7 @@ package org.unh.i_vote.data.model;
 
 public class ItemModel {
     private String titre;
-    private String subTitle;
+    private String subtitle;
 
     private String about;
     private String author;
@@ -12,8 +12,8 @@ public class ItemModel {
         return titre;
     }
 
-    public String getSubTitle() {
-        return subTitle;
+    public String getSubtitle() {
+        return subtitle;
     }
 
     public Integer getLogo() {
@@ -28,37 +28,26 @@ public class ItemModel {
         return author;
     }
 
-    public ItemModel(String titre, String subTitle, int logo) {
+    public ItemModel(String titre, String subtitle, int logo) {
         this.titre = titre;
-        this.subTitle = subTitle;
+        this.subtitle = subtitle;
         this.logo = logo;
 
     }
 
-    public ItemModel(String titre, String subTitle) {
+    public ItemModel(String titre, String subtitle) {
         this.titre = titre;
-        this.subTitle = subTitle;
+        this.subtitle = subtitle;
         this.logo = null;
 
     }
 
-    public ItemModel(String titre, String subTitle, String about, String author) {
+    public ItemModel(String titre, String subtitle, String about, String author) {
         this.titre = titre;
-        this.subTitle = subTitle;
+        this.subtitle = subtitle;
         this.about = about;
         this.author = author;
         this.logo = null;
     }
-    /** public LivresModel(String titre, String page) {
-        this.titre = titre;
-        this.page = page;
-    }
 
-    /*public String getTitre() {
-        return titre;
-    }
-
-    public String getPage() {
-        return page;
-    }*/
 }

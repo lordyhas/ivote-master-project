@@ -4,7 +4,7 @@ import org.unh.i_vote.data.database.model.Vote;
 
 public class ItemVoteModel extends ItemModel {
 
-    public String orgName;
+    private String orgName;
     public Vote vote;
 
     public ItemVoteModel(Vote vote){
