@@ -7,6 +7,22 @@
     android:orientation="vertical"
     tools:context=".ui.organization.OrganizationFragment">
 
+    <Button
+        android:id="@+id/createOrg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="16dp"
+        android:text="Créer une organisation" />
+
+    <Button
+        android:id="@+id/joinOrg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginVertical="16dp"
+        android:text="Rejoindre une organisation via le code" />
+
     <TextView
         android:id="@+id/titleOrg"
         android:layout_width="match_parent"
@@ -19,8 +35,18 @@
         android:textStyle="bold"
         android:textSize="20sp" />
 
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/orgRecyclerView"
+        android:layout_marginHorizontal="12dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
 </LinearLayout>
