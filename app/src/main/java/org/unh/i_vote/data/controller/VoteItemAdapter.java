@@ -38,7 +38,10 @@ public class VoteItemAdapter extends RecyclerView.Adapter<VoteItemAdapter.ItemVi
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         ItemVoteModel itemModel = itemVoteList.get(position);
         holder.itemName.setText(itemModel.getTitle());
-        holder.ItemHint.setText(itemModel.getOrgName());
+        if(itemModel.getOrgName() ==  null)
+            holder.ItemHint.setText("Vote Public");
+        else
+            holder.ItemHint.setText(itemModel.getOrgName());
         if(itemModel.getLogo() != null) holder.logoImage.setImageResource(itemModel.getLogo());
         //holder.logoImage.setImageResource();
 
