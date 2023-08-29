@@ -18,7 +18,6 @@ import java.util.List;
 public class OrgItemAdapter extends RecyclerView.Adapter<OrgItemAdapter.ItemViewHolder> {
     private static ClickListener clickListener;
 
-
     private final List<ItemModel> itemModelList;
 
     public OrgItemAdapter(List<ItemModel> itemModelList) {
@@ -29,15 +28,14 @@ public class OrgItemAdapter extends RecyclerView.Adapter<OrgItemAdapter.ItemView
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_org_recyview, parent, false);
-        ItemViewHolder itemViewHolder = new ItemViewHolder(view);
-        return itemViewHolder;
+        return new ItemViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         ItemModel itemModel = itemModelList.get(position);
         holder.itemName.setText(itemModel.getTitle());
-        holder.itemHint.setText(itemModel.getSubTitle());
+        holder.itemHint.setText(itemModel.getSubtitle());
         holder.itemAbout.setText(itemModel.getAbout());
         if(itemModel.getLogo() != null) holder.logoImage.setImageResource(itemModel.getLogo());
         //holder.logoImage.setImageResource();

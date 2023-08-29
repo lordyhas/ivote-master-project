@@ -5,12 +5,10 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class OrganizationViewModel extends ViewModel {
-
     private final MutableLiveData<String> mText;
-
     public OrganizationViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is slideshow fragment");
+        mText.setValue("Organisations dont vous êtes membres");
     }
 
     public LiveData<String> getText() {
