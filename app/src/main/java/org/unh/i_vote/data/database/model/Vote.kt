@@ -33,8 +33,6 @@ data class Vote(
             "subject" to subject,
             "choices" to choices,
             "title" to title,
-            //"orgName" to orgName,
-            //"orgId" to orgId,
             "endDate" to endDate.time,
             "isUniqueChoice" to isUniqueChoice,
         );
