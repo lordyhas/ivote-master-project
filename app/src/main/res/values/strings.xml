@@ -11,7 +11,7 @@
     <string name="menu_gallery">Votes</string>
     <string name="menu_slideshow">Organisations</string>
     <string name="menu_org">Organisations</string>
-    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_login">iVote UNH</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_username">Name</string>
     <string name="prompt_password">Password</string>
