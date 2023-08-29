@@ -66,6 +66,7 @@ import org.unh.i_vote.data.database.FirebaseRef
 import org.unh.i_vote.data.database.model.Choice
 import org.unh.i_vote.data.database.model.User
 import org.unh.i_vote.data.database.model.Vote
+import org.unh.i_vote.data.model.UserViewModel
 import org.unh.i_vote.ui.theme.IVoteTheme
 import java.io.Serializable
 import java.util.Date
@@ -125,6 +126,7 @@ class CreateVoteActivity : ComponentActivity() {
                             }
                         )
                     },
+
                     /*floatingActionButtonPosition = FabPosition.End,
                     floatingActionButton = {
                         FloatingActionButton(
@@ -143,13 +145,6 @@ class CreateVoteActivity : ComponentActivity() {
                                     .verticalScroll(scrollState)
                                     .padding(horizontal = 8.dp, vertical = 8.dp),
                             ) {
-                                //InputEmail()
-                                //Spacer(modifier = Modifier.padding(8.dp))
-
-                                /*rememberSaveable(stateSaver = TextFieldValue.Saver) {
-                                    mutableStateOf(TextFieldValue("", TextRange(0, 256)))
-                                }*/
-
                                 Column(
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                     modifier = Modifier.fillMaxSize(),
@@ -457,24 +452,6 @@ class CreateVoteActivity : ComponentActivity() {
     }
 
     @Composable
-    fun Greeting(name: String, modifier: Modifier = Modifier) {
-        Text(
-            text = "Hello $name!",
-            modifier = modifier
-        )
-    }
-
-    @Preview(showBackground = true)
-    @Composable
-    fun GreetingPreview() {
-        IVoteTheme {
-            Greeting("Android")
-        }
-    }
-
-
-
-    @Composable
     fun DropdownTextField(
         modifier: Modifier = Modifier,
         label: String,
@@ -515,6 +492,16 @@ class CreateVoteActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    suspend fun loadUser(id: String){
+        val userViewModel: UserViewModel = UserViewModel();
+        userViewModel.loadUser(id);
+    }
+
+    suspend fun setUser(user: User){
+        val userViewModel: UserViewModel = UserViewModel();
+        userViewModel.setUser(user);
     }
 
 }
