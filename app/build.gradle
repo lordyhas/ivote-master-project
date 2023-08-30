@@ -12,8 +12,8 @@ android {
         applicationId "org.unh.ivote"
         minSdk 24
         targetSdk 34
-        versionCode 1
-        versionName "1.0"
+        versionCode 5
+        versionName "1.0.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -40,7 +40,6 @@ android {
         jvmTarget = '1.8'
     }
     composeOptions {
-        //kotlinCompilerExtensionVersion '1.3.2'
         kotlinCompilerExtensionVersion = "1.4.3"
     }
     packagingOptions {
