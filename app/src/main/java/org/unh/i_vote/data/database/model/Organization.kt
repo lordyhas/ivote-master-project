@@ -28,8 +28,8 @@ data class Organization(
                 creatorName = map["creatorName"] as String,
                 name = map["name"] as String,
                 about = map["about"] as String,
-                userIdList = map.getOrDefault("userIdList ", emptyList<String>()) as List<String>,
-                adminIdList = map.getOrDefault("adminList ", emptyList<String>()) as List<String>,
+                userIdList = map.getOrDefault("userIdList", emptyList<String>()) as List<String>,
+                adminIdList = map.getOrDefault("adminList", emptyList<String>()) as List<String>,
             );
         }
     }

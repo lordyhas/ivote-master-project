@@ -20,21 +20,20 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import org.unh.i_vote.CreateOrganisationActivity;
+import org.unh.i_vote.CreateVoteActivity;
 import org.unh.i_vote.JoinOrgActivity;
-import org.unh.i_vote.VoteActivity;
+
 import org.unh.i_vote.data.controller.OrgItemAdapter;
 import org.unh.i_vote.data.database.FirebaseRef;
 import org.unh.i_vote.data.database.model.Organization;
-import org.unh.i_vote.data.model.ItemModel;
+import org.unh.i_vote.data.model.ItemOrgModel;
 import org.unh.i_vote.databinding.FragmentOrganizationBinding;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class OrganizationFragment extends Fragment {
@@ -50,55 +49,32 @@ public class OrganizationFragment extends Fragment {
         binding = FragmentOrganizationBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        Intent dataIntent = requireActivity().getIntent();
+        String email = dataIntent.getStringExtra("email");
+        String name = dataIntent.getStringExtra("name");
+
         final Button createOrganization = binding.createOrg;
         final Button joinOrganization = binding.joinOrg;
         final TextView textView = binding.titleOrg;
         organizationViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         //textView.setText("Organisations dont vous êtes membres"); // d'appartenance
 
-        createOrganization.setOnClickListener(view ->
-                startActivity(new Intent(getActivity(), CreateOrganisationActivity.class))
-        );
+        createOrganization.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), CreateOrganisationActivity.class);
+            intent.putExtra("email", email);
+            intent.putExtra("name", name);
+            startActivity(intent);
+        });
 
-        joinOrganization.setOnClickListener(view ->
-                startActivity(new Intent(getActivity(), JoinOrgActivity.class))
-        );
-
-        List<ItemModel> organizations = new ArrayList<>();
-
-
-        organizations.add(new ItemModel("Master Ingenieurie Logiciel","4 Membres","Aucune", "Hassan K"));
-        organizations.add(new ItemModel("Étudiants UNH","1425 Membres","Aucune", "Hassan K"));
-        organizations.add(new ItemModel("Assistants UNH","32 Membres","Aucune", "Hassan K"));
-        organizations.add(new ItemModel("Fac Info UNH","402 Membres","Aucune", "Hassan K"));
-        organizations.add(new ItemModel("Sécurité","204 membres","Aucune", "Hassan K"));
-        organizations.add(new ItemModel("Lecture","200 membres","Aucune", "Hassan K"));
+        joinOrganization.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), JoinOrgActivity.class);
+            intent.putExtra("email", email);
+            intent.putExtra("name", name);
+            startActivity(intent);
+        });
 
 
-        FirebaseRef.orgCollection.get().addOnCompleteListener(
-                new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot doc : task.getResult()) {
-                                //Organization org = Organization.Companion.fromMap(doc.getData());
-                                Organization org = doc.toObject(Organization.class);
-                                Log.d(TAG, doc.getId() + " => " + org);
-                                organizations.add(
-                                        new ItemModel(org.getName(),
-                                                org.getUserIdList().size()+ "Membres"));
-
-                            }
-                        } else {
-                            Log.e(TAG, "Error getting org documents: ", task.getException());
-                        }
-                    }
-                }
-        );
-
-
-
-
+        List<ItemOrgModel> organizations = new ArrayList<>();
 
 
         RecyclerView recyclerView = binding.orgRecyclerView; //findViewById(R.id.voteRecyclerView);
@@ -106,53 +82,67 @@ public class OrganizationFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        OrgItemAdapter orgItemAdapter = new OrgItemAdapter(organizations);
-        recyclerView.setAdapter(orgItemAdapter);
 
-        //organizations.add(new LivresModel("Livre F de lecture 7","722 pages",logoDefault));
 
-        orgItemAdapter.setOnItemClickListener(new OrgItemAdapter.ClickListener() {
-            @Override
-            public void onItemClick(int position, View v) {
-                //Toast.makeText(v.getContext(), "onItemClick = " + position, Toast.LENGTH_SHORT).show();
+        FirebaseRef.orgCollection.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            //Organization org = Organization.Companion.fromMap(doc.getData());
+                            Organization org = Organization.Companion.fromMap(doc.getData()); //doc.toObject(Organization.class);
+                            Log.d(TAG, doc.getId() + " => " + org);
+                            organizations.add(new ItemOrgModel(org));
+                        }
 
-                AlertDialog.Builder dialog = new AlertDialog.Builder(v.getContext());
+                        OrgItemAdapter orgItemAdapter = new OrgItemAdapter(organizations);
+                        recyclerView.setAdapter(orgItemAdapter);
 
-                dialog.setTitle("Organisation")
-                        .setMessage(
-                                "Nom de l'organistion : "+ organizations.get(position).getTitle()+"\n"+
-                                        "Author : "+ organizations.get(position).getAuthor() +"\n"
-                                        //" :"+ organizations.get(position). +"\n"+
-                        ).setPositiveButton("Créer un vote restreint", (dialogInterface, which) -> {
-                            //if(organizations.get(position).getMa)
-                            Toast.makeText(
-                                    v.getContext(),
-                                    "Le nombre des membres de l'organisation est " +
-                                            "insuffusisant pour un vote restreint ",
-                                    Toast.LENGTH_SHORT
-                            ).show();
-                        }).setNeutralButton("Voir les membres", new DialogInterface.OnClickListener() {
+                        orgItemAdapter.setOnItemClickListener(new OrgItemAdapter.ClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
+                            public void onItemClick(int position, View v) {
 
+                                AlertDialog.Builder dialog = new AlertDialog.Builder(v.getContext());
+
+                                dialog.setTitle("Organisation")
+                                        .setMessage(
+                                                "Nom : "+ organizations.get(position).getTitle()+"\n"+
+                                                "--> "+ organizations.get(position).getSubtitle()+"\n"+
+                                                        "Author : "+ organizations.get(position).getAuthor() +"\n"
+                                                //" :"+ organizations.get(position). +"\n"+
+                                        ).setPositiveButton("Créer un vote restreint", (dialogInterface, which) -> {
+                                            if(organizations.get(position).getNumberOfMember() > 1){
+                                                Intent intent = new Intent(getActivity(), CreateVoteActivity.class);
+                                                intent.putExtra("email", email);
+                                                intent.putExtra("name", name);
+                                                startActivity(intent);
+                                            }else{
+                                                Toast.makeText(
+                                                        v.getContext(),
+                                                        "Le nombre des membres de l'organisation est " +
+                                                                "insuffusisant pour un vote restreint ",
+                                                        Toast.LENGTH_SHORT
+                                                ).show();
+                                            }
+                                        }).setNeutralButton("Voir les membres", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                                            }
+                                        }).setNegativeButton("Fermer", (dialogInterface, i) -> {
+
+                                        }).create()
+                                        .show();
                             }
-                        }).setNegativeButton("Fermer", (dialogInterface, i) -> {
-
-                        }).create()
-                        .show();
-            }
-
-            @Override
-            public void onItemLongClick(int position, View v) {
-                //Toast.makeText(v.getContext(), "onItemLongClick = " + position, Toast.LENGTH_SHORT).show();
-                //Log.d(TAG, "onItemLongClick pos = " + position);
-            }
-        });
-
-
-
-
-
+                            @Override
+                            public void onItemLongClick(int position, View v) {
+                                //Toast.makeText(v.getContext(), "onItemLongClick = " + position, Toast.LENGTH_SHORT).show();
+                                //Log.d(TAG, "onItemLongClick pos = " + position);
+                            }
+                        });
+                    } else {
+                        Log.e(TAG, "Error getting org documents: ", task.getException());
+                    }
+                }
+        );
         return root;
     }
 
@@ -160,5 +150,18 @@ public class OrganizationFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    ItemOrgModel[] sampleOrgs(){
+        String userId = "htsheleka@gmail.com";
+        String userName = "Hassan K.";
+
+        return new ItemOrgModel[]{
+                new ItemOrgModel(new Organization("OG"+ new Date().getTime(),userId,userName,"Master Ingenieurie Logiciel","Aucune",new ArrayList<>(), new ArrayList<>())),
+                new ItemOrgModel(new Organization("OG"+ new Date().getTime(),userId,userName,"Étudiants UNH","Aucune",new ArrayList<>(), new ArrayList<>())),
+                new ItemOrgModel(new Organization("OG"+ new Date().getTime(),userId,userName,"Assistants UNH","Aucune",new ArrayList<>(), new ArrayList<>())),
+                new ItemOrgModel(new Organization("OG"+ new Date().getTime(),userId,userName,"Fac Info UNH","Aucune",new ArrayList<>(), new ArrayList<>())),
+                new ItemOrgModel(new Organization("OG"+ new Date().getTime(),userId,userName,"Sécurité","Aucune",new ArrayList<>(), new ArrayList<>())),
+        };
     }
 }

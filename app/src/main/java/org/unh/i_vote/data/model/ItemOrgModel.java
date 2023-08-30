@@ -13,11 +13,11 @@ public class ItemOrgModel extends ItemModel{
         this.organization = organization;
     }
 
-    int getNumberOfMember(){
+    public int getNumberOfMember(){
         return this.organization.getUserIdList().size();
     }
 
-    int getNumberOfAdmin(){
+    public int getNumberOfAdmin(){
         return this.organization.getAdminIdList().size();
     }
 }

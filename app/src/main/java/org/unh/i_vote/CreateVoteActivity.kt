@@ -87,13 +87,12 @@ class CreateVoteActivity : ComponentActivity() {
 
         setContent {
             MaterialTheme {
-                val textList = remember{
-                    mutableStateListOf<TextFieldValue>()
-                }
 
                 val choicesStateList = remember { mutableStateListOf<String>() }
                 val voteMutableState =  remember { mutableStateOf<Vote>(Vote.empty) }
                 //val count = remember { mutableStateOf(1) }
+
+                val savingMutableState =  remember { mutableStateOf<Boolean>(false) }
 
                 val selectedTypeOfVote = remember { mutableStateOf<String>(typeOfVote[0]) }
 
@@ -283,7 +282,7 @@ class CreateVoteActivity : ComponentActivity() {
                                 Spacer(modifier = Modifier.padding(16.dp))
 
                                 Row{
-                                    OutlinedButton(onClick = { finish()}) {
+                                    OutlinedButton(onClick = {finish()}) {
                                         Text(text = "Quitter")
                                     }
                                     Spacer(modifier = Modifier.padding(16.dp))

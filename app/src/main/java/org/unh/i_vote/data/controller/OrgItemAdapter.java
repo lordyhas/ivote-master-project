@@ -12,15 +12,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.unh.i_vote.R;
 import org.unh.i_vote.data.model.ItemModel;
+import org.unh.i_vote.data.model.ItemOrgModel;
 
 import java.util.List;
 
 public class OrgItemAdapter extends RecyclerView.Adapter<OrgItemAdapter.ItemViewHolder> {
     private static ClickListener clickListener;
 
-    private final List<ItemModel> itemModelList;
+    private final List<ItemOrgModel> itemModelList;
 
-    public OrgItemAdapter(List<ItemModel> itemModelList) {
+    public OrgItemAdapter(List<ItemOrgModel> itemModelList) {
         this.itemModelList = itemModelList;
     }
 
@@ -33,11 +34,12 @@ public class OrgItemAdapter extends RecyclerView.Adapter<OrgItemAdapter.ItemView
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-        ItemModel itemModel = itemModelList.get(position);
+        ItemOrgModel itemModel = itemModelList.get(position);
         holder.itemName.setText(itemModel.getTitle());
         holder.itemHint.setText(itemModel.getSubtitle());
         holder.itemAbout.setText(itemModel.getAbout());
-        if(itemModel.getLogo() != null) holder.logoImage.setImageResource(itemModel.getLogo());
+        holder.authorName.setText(itemModel.getAuthor());
+        //if(itemModel.getLogo() != null) holder.logoImage.setImageResource(itemModel.getLogo());
         //holder.logoImage.setImageResource();
     }
 
@@ -49,6 +51,7 @@ public class OrgItemAdapter extends RecyclerView.Adapter<OrgItemAdapter.ItemView
     public static class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         TextView itemName;
         TextView itemHint;
+        TextView authorName;
         TextView itemAbout;
         ImageView logoImage;
         CardView itemCard;
@@ -57,6 +60,7 @@ public class OrgItemAdapter extends RecyclerView.Adapter<OrgItemAdapter.ItemView
             itemView.setOnClickListener(this);
             itemName = itemView.findViewById(R.id.orgTitle);
             itemHint = itemView.findViewById(R.id.orgSubTitle);
+            authorName = itemView.findViewById(R.id.orgAuthor);
             itemAbout = itemView.findViewById(R.id.orgAbout);
             logoImage = itemView.findViewById(R.id.orgItemImage);
             itemCard = itemView.findViewById(R.id.orgItemCard);
