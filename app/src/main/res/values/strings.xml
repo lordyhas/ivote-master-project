@@ -76,4 +76,5 @@
     <string name="vote_logo">vote_logo</string>
     <string name="title_activity_join_org">JoinOrgActivity</string>
     <string name="title_activity_org_user_list">OrgUserListActivity</string>
+    <string name="welcome_message">Bienenue dans iVote UNH</string>
 </resources>

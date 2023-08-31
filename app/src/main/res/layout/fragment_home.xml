@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginVertical="16dp"
         android:gravity="center"
-        android:text="Bienenue dans iVote UNH"
+        android:text="@string/welcome_message"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="parent"
@@ -47,6 +47,7 @@
                 android:id="@+id/imageView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:src="@mipmap/profile_avatar_foreground" />
 
             <TextView
@@ -60,6 +61,7 @@
                 android:id="@+id/homeUserEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
                 android:text="username@email.com" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
