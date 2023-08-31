@@ -9,14 +9,6 @@ import com.google.firebase.ktx.Firebase
 import org.unh.i_vote.data.database.model.Organization
 import org.unh.i_vote.data.database.model.User
 
-
-/*private val store = Firebase.firestore.collection("iVoteApp").document("general_data")
-public val userRef =  store.collection("USERS");
-public val orgRef = store.collection("ORGS");
-public val orgVoteRef = store.collection("ORGS/private/votes");
-public val publicVoteRef = store.collection("PUBLIC_VOTES");
-*/
-
 private fun getFireStore(): FirebaseFirestore {
     // Using a builder pattern
     val settings = FirebaseFirestoreSettings.Builder()
@@ -31,17 +23,11 @@ private fun getFireStore(): FirebaseFirestore {
 }
 
 class FirebaseRef {
-    // Initialize Firestore
-
-
-// Enable offline persistence
-
     companion object{
-
-
-
-        private val store = getFireStore().collection("iVoteApp")
+        private val store = getFireStore()
+            .collection("iVoteApp")
             .document("general_data")
+
         @JvmField
         val userCollection =  store.collection("USERS");
 
