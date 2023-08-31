@@ -39,22 +39,19 @@ public class HomeFragment extends Fragment {
         Intent dataIntent = requireActivity().getIntent();
         String email = dataIntent.getStringExtra("email");
         String name = dataIntent.getStringExtra("name");
+        //final TextView textView = binding.textHome;
+        // homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
         userName.setText(name);
         userEmail.setText(email);
 
-        createVoteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), CreateVoteActivity.class);
-
-                intent.putExtra("email", email);
-                intent.putExtra("name", name);
-               startActivity(intent);
-            }
+        createVoteButton.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), CreateVoteActivity.class);
+            intent.putExtra("email", email);
+            intent.putExtra("name", name);
+           startActivity(intent);
         });
-        //final TextView textView = binding.textHome;
-       // homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
         return root;
     }
 

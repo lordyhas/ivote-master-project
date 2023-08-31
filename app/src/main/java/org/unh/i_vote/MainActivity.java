@@ -125,11 +125,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         NavigationUI.setupWithNavController(navigationView, navController);
 
 
-        //View headerView = binding.navView.getHeaderView(0);
-        //TextView profileName = (TextView) headerView.findViewById(R.id.profileUsername);
+        View headerView = navigationView.getHeaderView(0);
 
-
-        //profileName.setText(name);
+        TextView profileName = (TextView) headerView.findViewById(R.id.profileUsername);
+        TextView profileEmail = (TextView) headerView.findViewById(R.id.profileEmail);
+        profileName.setText(name);
+        profileEmail.setText(email);
     }
 
 
