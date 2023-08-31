@@ -1,12 +1,12 @@
 package org.unh.i_vote.data.model;
 
 public class ItemModel {
-    private String titre;
-    private String subtitle;
+    private final String titre;
+    private final String subtitle;
 
     private String about;
     private String author;
-    private Integer logo;
+    private final Integer logo;
 
     public String getTitle() {
         return titre;

@@ -260,7 +260,6 @@ class VoteActivity : ComponentActivity() {
 
             }
             Column(
-
                 //modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -333,10 +332,6 @@ class VoteActivity : ComponentActivity() {
                                 Toast.LENGTH_LONG,
                             ).show()
 
-
-
-
-
                             if(vote.id in user.votedList){
                                 Toast.makeText(
                                     applicationContext,
@@ -368,40 +363,6 @@ class VoteActivity : ComponentActivity() {
                                     }
                                     .addOnFailureListener { e -> Log.w(TAG, "Error updating vote choice", e)}
 
-                                // Create a batch to perform the update atomically
-                                //val batchVote = FirebaseFirestore.getInstance().batch()
-
-
-                                // Remove the old choice map from the array field using arrayRemove()
-                                /*batchVote.update(docVote, "choices",
-                                    FieldValue.arrayRemove(
-                                        mapOf(
-                                            "choice" to selectedOption.choice,
-                                            "numberOfVote" to selectedOption.numberOfVote
-                                        )
-                                    )
-                                )*/
-
-                                // Add a new choice map to the array field using arrayUnion()
-                                /*batchVote.update(docVote, "choices",
-                                    FieldValue.arrayUnion(
-                                        mapOf(
-                                            "choice" to selectedOption.choice,
-                                            "numberOfVote" to selectedOption.numberOfVote++
-                                        )
-                                    )
-                                ).commit().addOnSuccessListener {
-                                    // Update successful
-                                    Toast.makeText(
-                                        applicationContext,
-                                        "Vote effectuer",
-                                        Toast.LENGTH_LONG,
-                                    ).show()
-                                    alreadyVote.value = true;
-                                }.addOnFailureListener {e ->
-                                    Log.e(TAG,"Erreur : Update failed [batch] \n",e)
-                                }*/
-                                //voteState.value.choices.get(selectedOption);
 
                                 val batchUser = FirebaseFirestore.getInstance().batch()
 
