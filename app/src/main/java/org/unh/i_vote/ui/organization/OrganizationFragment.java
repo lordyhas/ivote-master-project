@@ -26,6 +26,7 @@ import org.unh.i_vote.CreateOrganisationActivity;
 import org.unh.i_vote.CreateVoteActivity;
 import org.unh.i_vote.JoinOrgActivity;
 
+import org.unh.i_vote.OrgUserListActivity;
 import org.unh.i_vote.data.controller.OrgItemAdapter;
 import org.unh.i_vote.data.database.FirebaseRef;
 import org.unh.i_vote.data.database.model.Organization;
@@ -102,11 +103,11 @@ public class OrganizationFragment extends Fragment {
 
                                 AlertDialog.Builder dialog = new AlertDialog.Builder(v.getContext());
 
-                                dialog.setTitle("Organisation")
-                                        .setMessage(
-                                                "Nom : "+ organizations.get(position).getTitle()+"\n"+
-                                                "--> "+ organizations.get(position).getSubtitle()+"\n"+
-                                                        "Author : "+ organizations.get(position).getAuthor() +"\n"
+                                dialog.setTitle("Organisation").setMessage(
+
+                                        "Nom : "+ organizations.get(position).getTitle()+"\n"+
+                                        "--> "+ organizations.get(position).getSubtitle()+"\n"+
+                                        "Author : "+ organizations.get(position).getAuthor() +""
                                                 //" :"+ organizations.get(position). +"\n"+
                                         ).setPositiveButton("Créer un vote restreint", (dialogInterface, which) -> {
                                             if(organizations.get(position).getNumberOfMember() > 1){
@@ -125,6 +126,11 @@ public class OrganizationFragment extends Fragment {
                                         }).setNeutralButton("Voir les membres", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialogInterface, int i) {
+                                                Intent intent = new Intent(getActivity(), OrgUserListActivity.class);
+                                                intent.putExtra("email", email);
+                                                intent.putExtra("name", name);
+                                                intent.putExtra("orgId", organizations.get(position).organization.getId());
+                                                startActivity(intent);
 
                                             }
                                         }).setNegativeButton("Fermer", (dialogInterface, i) -> {

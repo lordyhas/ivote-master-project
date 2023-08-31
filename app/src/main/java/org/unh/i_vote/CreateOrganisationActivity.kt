@@ -223,7 +223,7 @@ class CreateOrganisationActivity : AppCompatActivity() {
                                                     }
                                             }else{
                                                 Log.w(TAG, "Problem on getting user.id => to create [Organization]"+
-                                                        "\nuserEmail: "+userEmail+"| userName: "+userName)
+                                                        "\nuserEmail: "+userEmail+" | userName: "+userName)
                                             }
                                         }else{
                                             Toast.makeText(
