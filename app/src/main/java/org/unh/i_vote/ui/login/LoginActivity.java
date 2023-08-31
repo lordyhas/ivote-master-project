@@ -171,7 +171,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                 } else {
 
-                                    if(loggedUser.isLoggingIn()){
+                                    if(loggedUser.isLoggingIn()){ // haveAccount
                                         Log.w(TAG, "User "+loggedUser.getDisplayEmail()+"  not found: ");
                                         Toast.makeText(
                                                 getApplicationContext(),
@@ -200,8 +200,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 setResult(Activity.RESULT_OK);
 
-                //Complete and destroy login activity once successful
-                //finish();
             }
         });
 
@@ -222,14 +220,21 @@ public class LoginActivity extends AppCompatActivity {
                         passwordEditText.getText().toString());
             }
         };
+        nameEditText.addTextChangedListener(afterTextChangedListener);
         emailEditText.addTextChangedListener(afterTextChangedListener);
         passwordEditText.addTextChangedListener(afterTextChangedListener);
         passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    loginViewModel.login(emailEditText.getText().toString(),
-                            passwordEditText.getText().toString());
+                    if(haveAccount){
+                        loginViewModel.login(emailEditText.getText().toString(),
+                                passwordEditText.getText().toString());
+                    }else {
+                        loginViewModel.signIn(nameEditText.getText().toString(),emailEditText.getText().toString(),
+                                passwordEditText.getText().toString());
+                    }
+
                 }
                 return false;
             }
