@@ -12,7 +12,7 @@ android {
         applicationId "org.unh.ivote"
         minSdk 24
         targetSdk 34
-        versionCode 5
+        versionCode 7
         versionName "1.0.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -52,6 +52,8 @@ android {
 dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.7.1'
     implementation 'androidx.navigation:navigation-ui-ktx:2.7.1'
+    implementation platform('androidx.compose:compose-bom:2022.10.00')
+    androidTestImplementation platform('androidx.compose:compose-bom:2022.10.00')
     def lifecycle_version = "2.5.1"
     // Import the BoM for the Firebase platform
     implementation(platform("com.google.firebase:firebase-bom:32.2.2"))

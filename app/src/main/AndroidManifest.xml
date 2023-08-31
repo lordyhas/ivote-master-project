@@ -16,6 +16,11 @@
         android:theme="@style/Theme.IVote"
         tools:targetApi="31">
         <activity
+            android:name=".OrgUserListActivity"
+            android:exported="false"
+            android:label="@string/title_activity_org_user_list"
+            android:theme="@style/Theme.IVote" />
+        <activity
             android:name=".JoinOrgActivity"
             android:exported="false"
             android:label="@string/title_activity_join_org"
