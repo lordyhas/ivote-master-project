@@ -103,6 +103,8 @@ public class OrganizationFragment extends Fragment {
 
                                 AlertDialog.Builder dialog = new AlertDialog.Builder(v.getContext());
 
+
+
                                 dialog.setTitle("Organisation").setMessage(
 
                                         "Nom : "+ organizations.get(position).getTitle()+"\n"+
@@ -123,16 +125,13 @@ public class OrganizationFragment extends Fragment {
                                                         Toast.LENGTH_SHORT
                                                 ).show();
                                             }
-                                        }).setNeutralButton("Voir les membres", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialogInterface, int i) {
-                                                Intent intent = new Intent(getActivity(), OrgUserListActivity.class);
-                                                intent.putExtra("email", email);
-                                                intent.putExtra("name", name);
-                                                intent.putExtra("orgId", organizations.get(position).organization.getId());
-                                                startActivity(intent);
+                                        }).setNeutralButton("Voir les membres", (dialogInterface, i) -> {
+                                            Intent intent = new Intent(getActivity(), OrgUserListActivity.class);
+                                            intent.putExtra("email", email);
+                                            intent.putExtra("name", name);
+                                            intent.putExtra("orgId", organizations.get(position).organization.getId());
+                                            startActivity(intent);
 
-                                            }
                                         }).setNegativeButton("Fermer", (dialogInterface, i) -> {
 
                                         }).create()
