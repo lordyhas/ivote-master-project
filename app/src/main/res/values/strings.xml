@@ -13,8 +13,8 @@
     <string name="menu_org">Organisations</string>
     <string name="title_activity_login">iVote UNH</string>
     <string name="prompt_email">Email</string>
-    <string name="prompt_username">Name</string>
-    <string name="prompt_password">Password</string>
+    <string name="prompt_username">Nom</string>
+    <string name="prompt_password">Mot de passe</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome !"</string>
@@ -75,4 +75,5 @@
     <string name="have_no_account">Je n\'ai pas de compte</string>
     <string name="vote_logo">vote_logo</string>
     <string name="title_activity_join_org">JoinOrgActivity</string>
+    <string name="title_activity_org_user_list">OrgUserListActivity</string>
 </resources>
